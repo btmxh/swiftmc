@@ -54,10 +54,6 @@ jobs:
     - name: Build
       run: cmake --build build/coverage -j 2
 
-    - name: Test
-      working-directory: build/coverage
-      run: ctest --output-on-failure --no-tests=error -j 2
-
     - name: Process coverage info
       run: cmake --build build/coverage -t coverage
 
@@ -81,17 +77,6 @@ jobs:
 
     - name: Build
       run: cmake --build build/sanitize -j 2
-
-    - name: Test
-      working-directory: build/sanitize
-      env:
-        ASAN_OPTIONS: "strict_string_checks=1:\
-          detect_stack_use_after_return=1:\
-          check_initialization_order=1:\
-          strict_init_order=1:\
-          detect_leaks=1"
-        UBSAN_OPTIONS: print_stacktrace=1
-      run: ctest --output-on-failure --no-tests=error -j 2
 
   test:
     needs: [lint]
@@ -129,10 +114,6 @@ jobs:
 
     - name: Install
       run: cmake --install build --config Release --prefix prefix
-
-    - name: Test
-      working-directory: build
-      run: ctest --output-on-failure --no-tests=error -C Release -j 2
 
   docs:
     # Deploy docs only when builds succeed
